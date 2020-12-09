@@ -129,6 +129,7 @@ client *createClient(connection *conn) {
     c->argv = NULL;
     c->argv_len_sum = 0;
     c->cmd = c->lastcmd = NULL;
+    c->cmds = 0;
     c->user = DefaultUser;
     c->multibulklen = 0;
     c->bulklen = -1;
@@ -2127,7 +2128,7 @@ sds catClientInfoString(sds s, client *client) {
         total_mem += zmalloc_size(client->argv);
 
     return sdscatfmt(s,
-        "id=%U addr=%s %s name=%s age=%I idle=%I flags=%s db=%i sub=%i psub=%i multi=%i qbuf=%U qbuf-free=%U argv-mem=%U obl=%U oll=%U omem=%U tot-mem=%U events=%s cmd=%s user=%s",
+        "id=%U addr=%s %s name=%s age=%I idle=%I flags=%s db=%i sub=%i psub=%i multi=%i qbuf=%U qbuf-free=%U argv-mem=%U obl=%U oll=%U omem=%U tot-mem=%U events=%s cmd=%s user=%s cmds=%U",
         (unsigned long long) client->id,
         getClientPeerId(client),
         connGetInfo(client->conn, conninfo, sizeof(conninfo)),
@@ -2148,7 +2149,8 @@ sds catClientInfoString(sds s, client *client) {
         (unsigned long long) total_mem,
         events,
         client->lastcmd ? client->lastcmd->name : "NULL",
-        client->user ? client->user->name : "(superuser)");
+        client->user ? client->user->name : "(superuser)",
+        (unsigned long long) client->cmds);
 }
 
 sds getAllClientsInfoString(int type) {

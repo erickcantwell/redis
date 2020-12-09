@@ -598,6 +598,7 @@ int luaRedisGenericCommand(lua_State *lua, int raise_error) {
         goto cleanup;
     }
     c->cmd = c->lastcmd = cmd;
+    c->cmds += 1;
 
     /* There are commands that are not allowed inside scripts. */
     if (cmd->flags & CMD_NOSCRIPT) {

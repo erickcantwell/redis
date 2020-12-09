@@ -3553,6 +3553,7 @@ int processCommand(client *c) {
     /* Now lookup the command and check ASAP about trivial error conditions
      * such as wrong arity, bad command name and so forth. */
     c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
+    c->cmds += 1;
     if (!c->cmd) {
         sds args = sdsempty();
         int i;
